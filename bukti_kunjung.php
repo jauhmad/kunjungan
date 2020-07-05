@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Tracing Kunjungan</title>
+
+    <!-- Bootstrap -->
+    <link href="vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <!-- NProgress -->
+    <link href="vendors/nprogress/nprogress.css" rel="stylesheet">
+    <!-- Animate.css -->
+    <link href="vendors/animate.css/animate.min.css" rel="stylesheet">
+
+    <!-- Custom Theme Style -->
+    <link href="build/css/custom.min.css" rel="stylesheet">
+  </head>
+    <body class="login">
+    	<div>
+        <div class="login_wrapper">
+            <div class="animate form login_form">
+                <section class="login_content"> 
+                    <form>
+<?php
+include 'inc/inc_con_db.php';
+
+         $result2=mysqli_query($con,"select 
+         	                             gp_checkinout.userid,
+         	                             gp_checkinout.sensorid,
+         	                             lokasi.nama,
+                                         gp_checkinout.checktime 
+                                  from 
+                                    gp_checkinout,
+                                    lokasi
+                                  where
+                                    gp_checkinout.sensorid=lokasi.sensorid and
+                                    gp_checkinout.id ='".decrypt(xss('id'))."'");
+       $data=mysqli_fetch_array($result2);
+
+       echo '<input type="hidden" id="nik" name="nik" value="'.$data['userid'].'">';
+       echo '<input type="hidden" id="lokasi" name="lokasi" value="'.$data['sensorid'].'">';
+
+       buat_qr($data['nama']);
+       include 'tampil_qr.php';
+     
+?>
+
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/mainjquery.js"></script>
+<script type="text/javascript">
+    function close_window() {
+ /* if (confirm("Terima kasih atas kunjungan anda..")) {*/
+    $(location).attr('href', 'index');
+
+ /* }*/
+}
+</script>
+  <script type="text/javascript">
+         /*$(function () {*/
+          $('#cekout').click(function (result) {   
+            var lokasi= $("#lokasi").val();
+            var nik =   $("#nik").val();    
+            $.post(
+              'cekout', { 
+                lokasi: lokasi, 
+                nik:   nik
+              }, function () {
+                 //alert("The request has been submitted.");
+                //$('.success_msg').append("Vote Successfully Recorded").fadeOut();
+               // $("#toptitle").html(result);
+                //delay(3000);
+               close_window();
+                return false;
+              }
+            );
+            /*event.preventDefault();*/
+          });
+       /* });*/
+        </script>
+  </form>
+                </section>   
+            </div>
+        </div>   
+       </div>
+    </body>
+</html>

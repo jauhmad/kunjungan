@@ -33,8 +33,10 @@ include 'inc/inc_con_db.php';
          $result2=mysqli_query($con,"select 
          	                             gp_checkinout.userid,
          	                             gp_checkinout.sensorid,
-         	                             lokasi.nama,
-                                         gp_checkinout.checktime 
+         	                             lokasi.nama as nm_lokasi,
+                                       gp_checkinout.nama,
+                                       gp_checkinout.alamat,
+                                       gp_checkinout.checktime 
                                   from 
                                     gp_checkinout,
                                     lokasi
@@ -45,9 +47,16 @@ include 'inc/inc_con_db.php';
 
        echo '<input type="hidden" id="nik" name="nik" value="'.$data['userid'].'">';
        echo '<input type="hidden" id="lokasi" name="lokasi" value="'.$data['sensorid'].'">';
+       echo '<input type="hidden" id="nama" name="nama" value="'.$data['nama'].'">';
+       echo '<input type="hidden" id="alamat" name="alamat" value="'.$data['alamat'].'">';
 
-       buat_qr($data['nama']);
-       include 'tampil_qr.php';
+       if($data){
+	       buat_qr($data['nm_lokasi']);
+	       include 'tampil_qr.php';
+	   }else{
+	   	   echo '<h1>Data tidak ada</h1>';
+      	   echo '<a href="index"><button type="button" class="btn btn-round btn-warning btn-lg">OK</button></a>';	
+	   }    
      
 ?>
 
@@ -61,27 +70,29 @@ include 'inc/inc_con_db.php';
  /* }*/
 }
 </script>
-  <script type="text/javascript">
-         /*$(function () {*/
+ <script type="text/javascript">
+      
           $('#cekout').click(function (result) {   
             var lokasi= $("#lokasi").val();
             var nik =   $("#nik").val();    
+            var nama =   $("#nama").val();
+            var alamat =   $("#alamat").val();      
+
             $.post(
               'cekout', { 
                 lokasi: lokasi, 
-                nik:   nik
+                nik:   nik,
+                nama:   nama,
+                alamat:   alamat
               }, function () {
-                 //alert("The request has been submitted.");
-                //$('.success_msg').append("Vote Successfully Recorded").fadeOut();
-               // $("#toptitle").html(result);
-                //delay(3000);
-               close_window();
+            
+                close_window();
                 return false;
               }
             );
-            /*event.preventDefault();*/
+           
           });
-       /* });*/
+     
         </script>
   </form>
                 </section>   

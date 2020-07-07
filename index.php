@@ -1,3 +1,6 @@
+<?php 
+    include 'inc/inc_con_db.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -7,7 +10,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Tracing Kunjungan</title>
+    <title><?php echo $title ?></title>
 
     <!-- Bootstrap -->
     <link href="vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -20,6 +23,21 @@
 
     <!-- Custom Theme Style -->
     <link href="build/css/custom.min.css" rel="stylesheet">
+
+    <style type="text/css">
+        @-webkit-keyframes blink { 50% { border-color: #56c75b; }  }
+        canvas{ 
+          border-radius: 10px;
+          border: 6px solid  ;
+          /* position: fixed ; */
+          top: 10px ;
+          left: 10px ;
+          text-align:center ;
+          font-family: monospace ;
+
+          -webkit-animation: blink .5s step-end infinite alternate; 
+        }
+    </style>
   </head>
     <body class="login">
         <div>
@@ -37,18 +55,18 @@
              <?php
               if(!isset($_COOKIE['NIKKunjunganCookie']) ) {
                    echo '<div>
-                            <h1>NIK Anda</h1>
+                            <h2>NIK Anda</h2>
                             <input class="form-control" type="text" id="nik"  name="nik" placeholder="Masukkan NIK anda">
                          </div>   ';
               }else{
                    echo '<div>
-                           <h1>NIK Anda</h1>
+                           <h2>NIK Anda</h2>
                             <input class="form-control" type="text" id="nik"  name="nik" value="'.$_COOKIE['NIKKunjunganCookie'].'" >
                          </div>  ';  
               }
 
                if(isset($_COOKIE['CekinCookie']) && $_COOKIE['CekinCookie']!='0' ) { 
-                    include 'inc/inc_con_db.php';
+                    
                     $result=mysqli_query($con,"select * from gp_checkinout where id='".$_COOKIE['CekinCookie']."'"); 
                     $data=mysqli_fetch_array($result);
 
@@ -60,7 +78,7 @@
                }
 
             ?>
-            <h1>Scan QR Code</h1>
+            <h2>Pindai kode QR lokasi</h2>
             <canvas></canvas>
             <div class="clearfix"></div>
             <div class="separator">
@@ -72,8 +90,8 @@
                 <br />
 
                 <div>
-                  <h1><i class="fa fa-arrows-alt"></i> Tracing Kunjungan</h1>
-                  <p>©2020 Pemerintah Kabupaten Kulon Progo</p>
+                  <h1><i class="fa fa-arrows-alt"></i> <?php echo $judul ?></h1>
+                  <p><?php echo $footer ?></p>
                 </div>
               </div>
          
@@ -85,18 +103,22 @@
         <script type="text/javascript">
             var arg = {
                 resultFunction: function(result) {
-                    //$('body').append($('<li>' + result.format + ': ' + result.code + '</li>'));
-                   
                     var lokasi=result.code;
                     var nik = $("#nik").val();
 
-                    $.post("cekin", {lokasi: lokasi, nik:nik}, function(result){
-                        $("canvas").WebCodeCamJQuery(arg).data().plugin_WebCodeCamJQuery.stop();
-                        $("page").html(result);
-                       // $("#dnik").remove();
-                      });
+                    $("canvas").WebCodeCamJQuery(arg).data().plugin_WebCodeCamJQuery.stop();
 
-                   // $(location).attr('href', 'http://localhost/kunjungan');
+                    if(nik==''){
+                        alert("NIK tidak boleh kosong");
+                        $("#nik").focus();
+                    }else if(lokasi==''){ 
+                         alert("Lokasi pada QR code tidak terbaca");
+                    }else{   
+                        $.post("cekin", {lokasi: lokasi, nik:nik}, function(result){
+                            /*$("canvas").WebCodeCamJQuery(arg).data().plugin_WebCodeCamJQuery.stop();*/
+                            $("page").html(result);
+                          });
+                    }
                 }
             };
             $("canvas").WebCodeCamJQuery(arg).data().plugin_WebCodeCamJQuery.play();

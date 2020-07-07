@@ -11,11 +11,11 @@ if (!$con) {
   exit();
 }
 
-$judul="SinonaKU";
+$judul="Lacak Kunjungan";
 $title=$judul.' | Pemerintah Kabupaten Kulon Progo';
 $set_tahun="2020";
 
-$footer="&copy; Maret 2020 - ".date('Y')." Pemerintah Kabupaten Kulon Progo";
+$footer="&copy; Juli 2020 - ".date('Y')." Pemerintah Kabupaten Kulon Progo";
 
 function cleanurl($url){
     $url = strtok($url, "?");
@@ -364,6 +364,40 @@ function buat_qr($codeContents){
  // Simpan kode QR lagi, dengan logo di atasnya
          imagepng($QR,$tempdir.'qrwithlogo.png');
          return;
+}
+
+
+function cek_nik($nik){
+ //  ini_set('default_socket_timeout', 20); //seconds 
+    //post
+    $curl = curl_init();
+
+curl_setopt_array($curl, array(
+  CURLOPT_URL => "http://172.16.160.43:8080/dukcapil/get_json/34-01/dinkes/biodata",
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_ENCODING => "",
+  CURLOPT_MAXREDIRS => 10,
+  CURLOPT_TIMEOUT => 10,
+  CURLOPT_FOLLOWLOCATION => true,
+  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+  CURLOPT_CUSTOMREQUEST => "POST",
+  CURLOPT_POSTFIELDS =>"{\"nik\":\"$nik\",\"user_id\":\"412201907314susilaningsih\",\"password\":\"K3s3h4t4n\"} ",
+  CURLOPT_HTTPHEADER => array(
+    "Content-Type: application/json"
+  )
+));
+$response = curl_exec($curl);
+curl_close($curl);
+return $response;
+
+//get
+/*$url='https://blp.kulonprogokab.go.id/isb/nik/dinkes/index.php?PHP_AUTH_USER=jert754j3the8745&PHP_AUTH_PW=6r64u5h373495je76i468549036i559&nik='.$nik;
+$result = @file_get_contents($url);
+ if ($result === FALSE) {
+        return 'error';
+    } else {
+        return $result;
+    }*/
 }
 
 ?>

@@ -30,7 +30,7 @@ include 'inc/inc_con_db.php';
       exit();
     }
 
-    $cek_lok=mysqli_num_rows( mysqli_query($con,"select * from lokasi where sensorid='".$lokasi."'") );
+    $cek_lok=mysqli_num_rows( mysqli_query($con,"select * from lokasi where id='".$lokasi."'") );
     if($cek_lok==0){
       echo '<h1>Lokasi tidak terdaftar</h1>';
       echo '<a href="index"><button type="button" class="btn btn-round btn-warning btn-lg">OK</button></a>';
@@ -41,7 +41,7 @@ include 'inc/inc_con_db.php';
                 userid='".$nik."',
                 nama='".$nama."',
                 alamat='".$alamat."',
-                sensorid='".$lokasi."',
+                lokasi='".$lokasi."',
                 checktype='1'
             ");
      $last_id = mysqli_insert_id($con);
@@ -57,7 +57,7 @@ include 'inc/inc_con_db.php';
 
        $result2=mysqli_query($con,"select  
                                          gp_checkinout.userid,
-                                         gp_checkinout.sensorid,
+                                         gp_checkinout.lokasi,
                                          lokasi.nama as nm_lokasi,
                                          gp_checkinout.nama as nama,
                                          gp_checkinout.checktime 
@@ -65,7 +65,7 @@ include 'inc/inc_con_db.php';
                                     gp_checkinout,
                                     lokasi
                                   where
-                                    gp_checkinout.sensorid=lokasi.sensorid and
+                                    gp_checkinout.lokasi=lokasi.id and
                                     gp_checkinout.id ='".$last_id."'");
        $data=mysqli_fetch_array($result2);
 

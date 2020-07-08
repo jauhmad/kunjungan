@@ -15,7 +15,7 @@ setcookie('CekinCookie', '0' ,mktime (0, 0, 0, 12, 31, 2050));
                 userid='".$nik."',
                 nama='".$nama."',
                 alamat='".$alamat."',
-                sensorid='".$lokasi."',
+                lokasi='".$lokasi."',
                 checktype='0'
             ");
    

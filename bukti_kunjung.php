@@ -32,7 +32,7 @@ include 'inc/inc_con_db.php';
 
          $result2=mysqli_query($con,"select 
          	                             gp_checkinout.userid,
-         	                             gp_checkinout.sensorid,
+         	                             gp_checkinout.lokasi,
          	                             lokasi.nama as nm_lokasi,
                                        gp_checkinout.nama,
                                        gp_checkinout.alamat,
@@ -41,12 +41,12 @@ include 'inc/inc_con_db.php';
                                     gp_checkinout,
                                     lokasi
                                   where
-                                    gp_checkinout.sensorid=lokasi.sensorid and
+                                    gp_checkinout.lokasi=lokasi.id and
                                     gp_checkinout.id ='".decrypt(xss('id'))."'");
        $data=mysqli_fetch_array($result2);
 
        echo '<input type="hidden" id="nik" name="nik" value="'.$data['userid'].'">';
-       echo '<input type="hidden" id="lokasi" name="lokasi" value="'.$data['sensorid'].'">';
+       echo '<input type="hidden" id="lokasi" name="lokasi" value="'.$data['lokasi'].'">';
        echo '<input type="hidden" id="nama" name="nama" value="'.$data['nama'].'">';
        echo '<input type="hidden" id="alamat" name="alamat" value="'.$data['alamat'].'">';
 
